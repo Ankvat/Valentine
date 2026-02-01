@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<link rel="icon" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+<text y='85' x='50' text-anchor='middle' font-size='90'>🤍</text>
+</svg>">
+
+<title>Valentine?</title>
+
+<style>
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5dfe7;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 40px;
+    width: 520px;
+    text-align: center;
+    border-radius: 22px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    position: relative;
+    z-index: 5;
+}
+
+/* FINAL SCREEN CONTAINER (hidden first) */
+#finalScreen {
+    display: none;
+    text-align: center;
+    z-index: 5;
+}
+
+/* BUTTONS */
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+button {
+    padding: 10px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+/* YES */
+#yes {
+    background: #ff4d79;
+    color: white;
+}
+
+/* NO (runs away) */
+#no {
+    background: #ddd;
+    color: black;
+    position: fixed;
+}
+
+/* CONFETTI HEARTS - FRONT LAYER */
+.heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* SHOOT VERY HIGH */
+@keyframes shootUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-750px);
+        opacity: 1;
+    }
+}
+
+/* VERY SLOW FALL */
+@keyframes slowFall {
+    0% {
+        transform: translateY(-750px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- QUESTION CARD -->
+<div class="card" id="questionCard">
+
+    <div class="header-gif">
+        <img src="https://media4.giphy.com/media/Zl7u48zLVFgLpRwq6f/giphy.gif"
+             width="140">
+    </div>
+
+    <h1>Jan, will you be my valentine? 💖</h1>
+
+    <div class="buttons">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+    </div>
+
+    <div class="note">*No is playing hard to get 🤭*</div>
+
+</div>
+
+<!-- FINAL SCREEN (appears AFTER YES) -->
+<div id="finalScreen">
+    <h2 style="font-size:20px;">
+        Happpyyyyy Valentinessss Dayyyyy! Ummmmaaaahhhhhhh 💘
+    </h2>
+
+    <h3 style="font-size:16px;">
+        You had no choice but to say Yes 😂💖
+    </h3>
+
+    <img src="https://media2.giphy.com/media/9zzUYFVSrpKRaZuW5A/giphy.gif"
+         width="260">
+</div>
+
+<script>
+const noButton = document.getElementById("no");
+const yesButton = document.getElementById("yes");
+const questionCard = document.getElementById("questionCard");
+const finalScreen = document.getElementById("finalScreen");
+
+/* NO BUTTON RUNS AWAY */
+noButton.addEventListener("mouseover", () => {
+    const margin = 120;
+    const x = Math.random() * (window.innerWidth - margin);
+    const y = Math.random() * (window.innerHeight - margin);
+
+    noButton.style.left = x + "px";
+    noButton.style.top = y + "px";
+});
+
+/* YES CLICK — SWITCH TO FINAL SCREEN */
+yesButton.addEventListener("click", () => {
+
+    // REMOVE EVERYTHING ELSE
+    questionCard.style.display = "none";
+
+    // SHOW FINAL MESSAGE + GIF
+    finalScreen.style.display = "block";
+
+    // START CONFETTI
+    startConfetti();
+});
+
+function startConfetti() {
+
+    let interval = setInterval(() => {
+
+        // LEFT CANNON
+        createHeart(20, window.innerHeight - 10, 1);
+
+        // RIGHT CANNON
+        createHeart(window.innerWidth - 40, window.innerHeight - 10, -1);
+
+    }, 120);
+
+    setTimeout(() => clearInterval(interval), 9000);
+}
+
+function createHeart(x, y, direction) {
+
+    const heart = document.createElement("div");
+    heart.className = "heart";
+
+    const size = Math.random() * 35 + 15;
+    heart.style.fontSize = size + "px";
+
+    heart.innerHTML = Math.random() > 0.5 ? "❤️" : "🤍";
+
+    heart.style.left = x + "px";
+    heart.style.bottom = "0px";
+
+    document.body.appendChild(heart);
+
+    heart.style.animation = "shootUp 1.1s ease-out forwards";
+
+    setTimeout(() => {
+
+        const drift = Math.random() * 500 * direction;
+        heart.style.left = (x + drift) + "px";
+        heart.style.animation = "slowFall 6s linear forwards";
+
+    }, 1100);
+
+    setTimeout(() => heart.remove(), 7000);
+}
+</script>
+
+</body>
+</html>
